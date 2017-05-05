@@ -1,0 +1,28 @@
+{
+  "name": "apimonitoring",
+  "version": "1.0.0",
+  "description": "Monitoring of the API",
+  "main": "index.js",
+  "dependencies": {
+	"express": "~4.15.0",
+	"body-parser": "~1.17.1",
+	"winston":"~2.3.1",
+	"moment":"~2.18.1",
+	"cors":"~2.8.3",
+	"properties-reader":"~0.0.15",
+	"replaceall":"~0.1.6"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MAPARAB/"
+  },
+  "keywords": [
+    "Monitoring"
+  ],
+  "author": "Makarand Parab",
+  "license": "ISC"
+}
