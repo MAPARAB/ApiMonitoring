@@ -2,7 +2,7 @@ var jwt = require('jwt-simple');
 var http = require('http');
 var PropertiesReader = require('properties-reader');
 
-var properties = PropertiesReader('/home/ApiMonitoring/properties/endpoint.properties');
+var properties = PropertiesReader('properties/endpoint.properties');
 
 
 exports.login = function(req, res)

@@ -5,8 +5,8 @@ var PropertiesReader = require('properties-reader');
 var moment = require('moment');
 var replaceall = require("replaceall");
 
-var properties = PropertiesReader('/home/ApiMonitoring/properties/queries.properties');
-properties = properties.append('/home/ApiMonitoring/properties/endpoint.properties');
+var properties = PropertiesReader('properties/queries.properties');
+properties = properties.append('properties/endpoint.properties');
 
 
 exports.apiReport = function(req, res)
