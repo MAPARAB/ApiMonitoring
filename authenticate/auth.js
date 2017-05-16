@@ -1,8 +1,60 @@
 var jwt = require('jwt-simple');
 var http = require('http');
 var PropertiesReader = require('properties-reader');
+var ldap = require('ldapjs');
 
 var properties = PropertiesReader('properties/endpoint.properties');
+
+exports.authenticate = function(req, res)
+					{
+						   var username = req.body.username;
+						   var password = req.body.password;
+						   var ldapres = null;
+						   var result = null; 
+						   
+						   var client = ldap.createClient({
+															url: 'ldap://ldap.forumsys.com:389'
+														  });
+														  
+						   var opts = {
+										filter: '(uid='+ username +')',
+										scope: 'sub'
+									  }				
+
+						   client.search('dc=example,dc=com', opts, function (err, result) 
+						   {
+							
+								  result.on('searchEntry', function (entry) {
+												ldapres = entry.raw
+											})
+
+								  result.on('end', function (result) 
+											{
+												if (!ldapres) 
+												{ 
+													result = "{\"status\":\"401\",\"message\":\"Invalid Username\"}";
+													res.status(401);
+													return res.send(result) 
+												}							
+
+											    client.bind(ldapres.dn, password, function (err) 
+												{
+													if (err) 
+													{ 
+														result = "{\"status\":\"401\",\"message\":\"Invalid Password\"}";
+														res.status(401);
+														return res.send(result) 
+													}
+
+													result = "{\"status\":\"200\",\"message\":\"Login Successfull\"}"; 
+													res.status(200);		
+													res.send(result)
+												})
+											})
+						   })								  			
+					   }
+
+
 
 
 exports.login = function(req, res)
@@ -21,7 +73,7 @@ exports.login = function(req, res)
     				}
 					
 					// Fire a query to OpenAM and check if the credentials are valid
-					var endpoint = properties.get('open-am.security.endpoint');
+					var endpoint = properties.get('open-am.security.authenticate.endpoint');
 					var hostInfo = properties.get('olp-adapter-service-access.api.proxy.ip');
 					var portInfo = properties.get('olp-adapter-service-access.api.proxy.port');
 
