@@ -11,7 +11,8 @@
 	"cors":"~2.8.3",
 	"properties-reader":"~0.0.15",
 	"replaceall":"~0.1.6",
-	"jwt-simple":"~0.5.1"
+	"jwt-simple":"~0.5.1",
+  "ldapjs":"~1.0.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
