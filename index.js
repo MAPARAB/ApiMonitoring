@@ -30,7 +30,7 @@ router.get('/home', function(req, res) {
 });
 
 //Login
-router.post('/login', auth.login);
+router.post('/login', auth.authenticate);
 
 //Elastic search query
 router.post('/api/v1/report', apiService.apiReport);
