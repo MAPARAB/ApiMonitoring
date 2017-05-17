@@ -94,7 +94,7 @@ exports.authenticate = function(req, res)
 															jwt.sign(
 																{data: username}, 
 																'secret', 
-																{ expiresIn: '1h' }
+																{ expiresIn: '24h' }
 															);
 
 													result = "{\"status\":\"200\",\"message\":\"Login Successfull\",\"token\":\"" + token + "\"}"; 
