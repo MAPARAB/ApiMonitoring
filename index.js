@@ -19,6 +19,7 @@ app.use(cors());
 
 var port = process.env.PORT || 8080;        // set our port
 
+app.all('/api/v1/*', auth.validate);
 
 // ROUTES FOR OUR API
 // =============================================================================
