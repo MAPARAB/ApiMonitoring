@@ -3,7 +3,50 @@ var http = require('http');
 var PropertiesReader = require('properties-reader');
 var ldap = require('ldapjs');
 
+// sign with default (HMAC SHA256) 
+var jwt = require('jsonwebtoken');
+
 var properties = PropertiesReader('properties/endpoint.properties');
+
+exports.validate = function(req, res, next)
+					{
+						console.log("Protected resources are been checked for");
+						//console.log(req.headers['userinfo']);
+						//var key = req.headers['userinfo'] ;
+						var key = req.headers['token'] ;
+
+						if(key)
+						{
+							try
+							{
+								var decoded = jwt.verify(key, 'secret');
+								return next(); // To move to next middleware	
+							}
+							catch(err) 
+							{
+								res.status(403);
+								res.json({
+											"status": 403,
+											"message": "Token is invalid"
+										});
+								return;
+							}
+
+							//return next(); // To move to next middleware
+						}
+						else
+						{
+							res.status(403);
+							res.json({
+										"status": 403,
+										"message": "Not Authorized"
+									});
+							return;			
+						}
+					}
+
+
+
 
 exports.authenticate = function(req, res)
 					{
@@ -46,16 +89,21 @@ exports.authenticate = function(req, res)
 														return res.send(result) 
 													}
 
-													result = "{\"status\":\"200\",\"message\":\"Login Successfull\"}"; 
+													
+													var token = 
+															jwt.sign(
+																{data: username}, 
+																'secret', 
+																{ expiresIn: '1h' }
+															);
+
+													result = "{\"status\":\"200\",\"message\":\"Login Successfull\",\"token\":\"" + token + "\"}"; 
 													res.status(200);		
 													res.send(result)
 												})
 											})
 						   })								  			
 					   }
-
-
-
 
 exports.login = function(req, res)
 				{
