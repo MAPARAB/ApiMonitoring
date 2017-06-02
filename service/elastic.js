@@ -27,10 +27,10 @@ exports.apiAsyncReport = function(req, res)
                          var vendorArray = vendors.split(',');
                          console.log(vendorArray);
 
-                        async.parallel([AmazonHits, EbayHits, StoreFeederHits, StubhubHits], function(err, results)
+                        async.parallel([AmazonHits, EbayHits, StoreFeederHits, StubhubHits, PayPalHits], function(err, results)
                         {
                           console.log("Executed all calls in parallel.");
-                          res.send({"Result" : [{"Vendor": vendorArray[0], api:results[0]}, {"Vendor": vendorArray[1], api:results[1]} , {"Vendor": vendorArray[2], api:results[2]}, {"Vendor": vendorArray[3], api:results[3]}]});
+                          res.send({"Result" : [{"Vendor": vendorArray[0], api:results[0]}, {"Vendor": vendorArray[1], api:results[1]} , {"Vendor": vendorArray[2], api:results[2]}, {"Vendor": vendorArray[3], api:results[3]}, , {"Vendor": vendorArray[4], api:results[4]}]});
                         })
 
                         function AmazonHits(callback)
@@ -185,6 +185,54 @@ exports.apiAsyncReport = function(req, res)
                                 queryStr = queryStr.replace('Vendor' , vendorArray[3]);
 
                                 console.log("Stubhub ::::" + queryStr);
+
+                                // An object of options to indicate where to post to
+                                var post_options = {
+                                                 host: hostInfo,
+                                                 port: portInfo,
+                                                 path: endpoint,
+                                                 method: 'POST',
+                                                 headers: {
+                                                                'Content-Type': 'application/json',
+                                                                'Content-Length': Buffer.byteLength(queryStr)
+                                                           }
+                                                }
+                                
+                                var request = http.request(post_options, function(response)
+                                              {
+                                                var body = "";
+
+                                                response.on('data', function(data)					
+                                                {
+                                                        body += data ;
+                                                });
+
+                                                response.on('end', function()
+                                                {
+                                                        obj = JSON.parse(body);
+                                                        callback(false, obj);
+                                                });
+
+                                              });
+                                
+                                                request.on('error', function(e)
+                                                {
+                                                        console.log('Problem with request: ' + e.message);
+                                                        callback(false, obj);
+                                                });
+
+                                request.write(queryStr);
+                                request.end();       
+                        }
+
+                         function PayPalHits(callback)
+                        {
+                                var queryStr = properties.get('olp-adapter-service-access.api.search.query');
+                                queryStr = queryStr.replace('1493363491000', new Date(moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
+                                queryStr = queryStr.replace('1493367091000' , new Date(moment().format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
+                                queryStr = queryStr.replace('Vendor' , vendorArray[4]);
+
+                                console.log("PayPal ::::" + queryStr);
 
                                 // An object of options to indicate where to post to
                                 var post_options = {
