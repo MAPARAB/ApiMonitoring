@@ -16,6 +16,11 @@ var vendors = properties.get('olp-adapter-service-access.api.search.vendors');
 
 exports.apiAsyncReport = function(req, res)
                         {
+                         //get the value from header
+                        var status = 'success' ;
+                        status = req.headers['status'];
+                        console.log(status);
+
                          //Calculating the date range
                          var range = JSON.stringify(req.body);
 			 range =  replaceall("\"","", range);
@@ -35,7 +40,11 @@ exports.apiAsyncReport = function(req, res)
 
                         function AmazonHits(callback)
                         {
-                                var queryStr = properties.get('olp-adapter-service-access.api.search.query');
+                                if(status.trim() == 'success')
+                                {var queryStr = properties.get('olp-adapter-service-access.api.search.query');}
+                                else
+                                {var queryStr = properties.get('olp-adapter-service-access.api.failsearch.query');}
+                                
                                 queryStr = queryStr.replace('1493363491000', new Date(moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('1493367091000' , new Date(moment().format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('Vendor' , vendorArray[0]);
@@ -83,7 +92,11 @@ exports.apiAsyncReport = function(req, res)
 
                         function EbayHits(callback)
                         {
-                                var queryStr = properties.get('olp-adapter-service-access.api.search.query');
+                                if(status.trim() == 'success')
+                                {var queryStr = properties.get('olp-adapter-service-access.api.search.query');}
+                                else
+                                {var queryStr = properties.get('olp-adapter-service-access.api.failsearch.query');}
+
                                 queryStr = queryStr.replace('1493363491000', new Date(moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('1493367091000' , new Date(moment().format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('Vendor' , vendorArray[1]);
@@ -131,7 +144,11 @@ exports.apiAsyncReport = function(req, res)
 
                         function StoreFeederHits(callback)
                         {
-                                var queryStr = properties.get('olp-adapter-service-access.api.search.query');
+                                if(status.trim() == 'success')
+                                {var queryStr = properties.get('olp-adapter-service-access.api.search.query');}
+                                else
+                                {var queryStr = properties.get('olp-adapter-service-access.api.failsearch.query');}
+
                                 queryStr = queryStr.replace('1493363491000', new Date(moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('1493367091000' , new Date(moment().format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('Vendor' , vendorArray[2]);
@@ -179,7 +196,11 @@ exports.apiAsyncReport = function(req, res)
 
                         function StubhubHits(callback)
                         {
-                                var queryStr = properties.get('olp-adapter-service-access.api.search.query');
+                                if(status.trim() == 'success')
+                                {var queryStr = properties.get('olp-adapter-service-access.api.search.query');}
+                                else
+                                {var queryStr = properties.get('olp-adapter-service-access.api.failsearch.query');}
+
                                 queryStr = queryStr.replace('1493363491000', new Date(moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('1493367091000' , new Date(moment().format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('Vendor' , vendorArray[3]);
@@ -227,7 +248,11 @@ exports.apiAsyncReport = function(req, res)
 
                          function PayPalHits(callback)
                         {
-                                var queryStr = properties.get('olp-adapter-service-access.api.search.query');
+                                if(status.trim() == 'success')
+                                {var queryStr = properties.get('olp-adapter-service-access.api.search.query');}
+                                else
+                                {var queryStr = properties.get('olp-adapter-service-access.api.failsearch.query');}
+                                
                                 queryStr = queryStr.replace('1493363491000', new Date(moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('1493367091000' , new Date(moment().format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('Vendor' , vendorArray[4]);
