@@ -36,8 +36,8 @@ exports.apiAsyncReport = function(req, res)
                         function AmazonHits(callback)
                         {
                                 var queryStr = properties.get('olp-adapter-service-access.api.search.query');
-                                queryStr = queryStr.replace('1493363491000', moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS'));
-                                queryStr = queryStr.replace('1493367091000' , moment().format('YYYY-MM-DD HH:mm:ss.SSS'));
+                                queryStr = queryStr.replace('1493363491000', new Date(moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
+                                queryStr = queryStr.replace('1493367091000' , new Date(moment().format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('Vendor' , vendorArray[0]);
 
                                  console.log("Amazon ::::" + queryStr);
@@ -84,8 +84,8 @@ exports.apiAsyncReport = function(req, res)
                         function EbayHits(callback)
                         {
                                 var queryStr = properties.get('olp-adapter-service-access.api.search.query');
-                                queryStr = queryStr.replace('1493363491000', moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS'));
-                                queryStr = queryStr.replace('1493367091000' , moment().format('YYYY-MM-DD HH:mm:ss.SSS'));
+                                queryStr = queryStr.replace('1493363491000', new Date(moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
+                                queryStr = queryStr.replace('1493367091000' , new Date(moment().format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('Vendor' , vendorArray[1]);
 
                                 console.log("eBay ::::" + queryStr);
@@ -132,8 +132,8 @@ exports.apiAsyncReport = function(req, res)
                         function StoreFeederHits(callback)
                         {
                                 var queryStr = properties.get('olp-adapter-service-access.api.search.query');
-                                queryStr = queryStr.replace('1493363491000', moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS'));
-                                queryStr = queryStr.replace('1493367091000' , moment().format('YYYY-MM-DD HH:mm:ss.SSS'));
+                                queryStr = queryStr.replace('1493363491000', new Date(moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
+                                queryStr = queryStr.replace('1493367091000' , new Date(moment().format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('Vendor' , vendorArray[2]);
 
                                  console.log("StoreFeeder ::::" + queryStr);
@@ -180,8 +180,8 @@ exports.apiAsyncReport = function(req, res)
                         function StubhubHits(callback)
                         {
                                 var queryStr = properties.get('olp-adapter-service-access.api.search.query');
-                                queryStr = queryStr.replace('1493363491000', moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS'));
-                                queryStr = queryStr.replace('1493367091000' , moment().format('YYYY-MM-DD HH:mm:ss.SSS'));
+                                queryStr = queryStr.replace('1493363491000', new Date(moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
+                                queryStr = queryStr.replace('1493367091000' , new Date(moment().format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                 queryStr = queryStr.replace('Vendor' , vendorArray[3]);
 
                                 console.log("Stubhub ::::" + queryStr);
