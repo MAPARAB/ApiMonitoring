@@ -4,9 +4,232 @@ var http = require('http');
 var PropertiesReader = require('properties-reader');
 var moment = require('moment');
 var replaceall = require("replaceall");
+var async = require("async");
 
 var properties = PropertiesReader('properties/queries.properties');
 properties = properties.append('properties/endpoint.properties');
+
+var endpoint = properties.get('olp-adapter-service-access.api.search.endpoint');
+var hostInfo = properties.get('olp-adapter-service-access.api.proxy.ip');
+var portInfo = properties.get('olp-adapter-service-access.api.proxy.port');
+var vendors = properties.get('olp-adapter-service-access.api.search.vendors');
+
+exports.apiAsyncReport = function(req, res)
+                        {
+                         //Calculating the date range
+                         var range = JSON.stringify(req.body);
+			 range =  replaceall("\"","", range);
+			 range.trim();	 
+			 var args1 = range.substring(range.indexOf(":")+1, range.length-1);
+			 var args2 = range.substring(1,range.indexOf(":"));     
+
+                         //Split of vendors
+                         var vendorArray = vendors.split(',');
+                         console.log(vendorArray);
+
+                        async.parallel([AmazonHits, EbayHits, StoreFeederHits, StubhubHits], function(err, results)
+                        {
+                          console.log("Executed all calls in parallel.");
+                          res.send({"Result" : [{"Vendor": vendorArray[0], api1:results[0]}, {"Vendor": vendorArray[1], api2:results[1]} , {"Vendor": vendorArray[2], api2:results[2]}, {"Vendor": vendorArray[3], api2:results[3]}]});
+                        })
+
+                        function AmazonHits(callback)
+                        {
+                                var queryStr = properties.get('olp-adapter-service-access.api.search.query');
+                                queryStr = queryStr.replace('1493363491000', moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS'));
+                                queryStr = queryStr.replace('1493367091000' , moment().format('YYYY-MM-DD HH:mm:ss.SSS'));
+                                queryStr = queryStr.replace('Vendor' , vendorArray[0]);
+
+                                 console.log("Amazon ::::" + queryStr);
+
+                                // An object of options to indicate where to post to
+                                var post_options = {
+                                                 host: hostInfo,
+                                                 port: portInfo,
+                                                 path: endpoint,
+                                                 method: 'POST',
+                                                 headers: {
+                                                                'Content-Type': 'application/json',
+                                                                'Content-Length': Buffer.byteLength(queryStr)
+                                                           }
+                                                }
+                                
+                                var request = http.request(post_options, function(response)
+                                              {
+                                                var body = "";
+
+                                                response.on('data', function(data)					
+                                                {
+                                                        body += data ;
+                                                });
+
+                                                response.on('end', function()
+                                                {
+                                                        obj = JSON.parse(body);
+                                                        callback(false, obj);
+                                                });
+
+                                              });
+                                
+                                                request.on('error', function(e)
+                                                {
+                                                        console.log('Problem with request: ' + e.message);
+                                                        callback(false, obj);
+                                                });
+
+                                request.write(queryStr);
+                                request.end();       
+                        }
+
+                        function EbayHits(callback)
+                        {
+                                var queryStr = properties.get('olp-adapter-service-access.api.search.query');
+                                queryStr = queryStr.replace('1493363491000', moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS'));
+                                queryStr = queryStr.replace('1493367091000' , moment().format('YYYY-MM-DD HH:mm:ss.SSS'));
+                                queryStr = queryStr.replace('Vendor' , vendorArray[1]);
+
+                                console.log("eBay ::::" + queryStr);
+
+                                // An object of options to indicate where to post to
+                                var post_options = {
+                                                 host: hostInfo,
+                                                 port: portInfo,
+                                                 path: endpoint,
+                                                 method: 'POST',
+                                                 headers: {
+                                                                'Content-Type': 'application/json',
+                                                                'Content-Length': Buffer.byteLength(queryStr)
+                                                           }
+                                                }
+                                
+                                var request = http.request(post_options, function(response)
+                                              {
+                                                var body = "";
+
+                                                response.on('data', function(data)					
+                                                {
+                                                        body += data ;
+                                                });
+
+                                                response.on('end', function()
+                                                {
+                                                        obj = JSON.parse(body);
+                                                        callback(false, obj);
+                                                });
+
+                                              });
+                                
+                                                request.on('error', function(e)
+                                                {
+                                                        console.log('Problem with request: ' + e.message);
+                                                        callback(false, obj);
+                                                });
+
+                                request.write(queryStr);
+                                request.end();       
+                        }
+
+                        function StoreFeederHits(callback)
+                        {
+                                var queryStr = properties.get('olp-adapter-service-access.api.search.query');
+                                queryStr = queryStr.replace('1493363491000', moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS'));
+                                queryStr = queryStr.replace('1493367091000' , moment().format('YYYY-MM-DD HH:mm:ss.SSS'));
+                                queryStr = queryStr.replace('Vendor' , vendorArray[2]);
+
+                                 console.log("StoreFeeder ::::" + queryStr);
+
+                                // An object of options to indicate where to post to
+                                var post_options = {
+                                                 host: hostInfo,
+                                                 port: portInfo,
+                                                 path: endpoint,
+                                                 method: 'POST',
+                                                 headers: {
+                                                                'Content-Type': 'application/json',
+                                                                'Content-Length': Buffer.byteLength(queryStr)
+                                                           }
+                                                }
+                                
+                                var request = http.request(post_options, function(response)
+                                              {
+                                                var body = "";
+
+                                                response.on('data', function(data)					
+                                                {
+                                                        body += data ;
+                                                });
+
+                                                response.on('end', function()
+                                                {
+                                                        obj = JSON.parse(body);
+                                                        callback(false, obj);
+                                                });
+
+                                              });
+                                
+                                                request.on('error', function(e)
+                                                {
+                                                        console.log('Problem with request: ' + e.message);
+                                                        callback(false, obj);
+                                                });
+
+                                request.write(queryStr);
+                                request.end();       
+                        }
+
+                        function StubhubHits(callback)
+                        {
+                                var queryStr = properties.get('olp-adapter-service-access.api.search.query');
+                                queryStr = queryStr.replace('1493363491000', moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS'));
+                                queryStr = queryStr.replace('1493367091000' , moment().format('YYYY-MM-DD HH:mm:ss.SSS'));
+                                queryStr = queryStr.replace('Vendor' , vendorArray[3]);
+
+                                console.log("Stubhub ::::" + queryStr);
+
+                                // An object of options to indicate where to post to
+                                var post_options = {
+                                                 host: hostInfo,
+                                                 port: portInfo,
+                                                 path: endpoint,
+                                                 method: 'POST',
+                                                 headers: {
+                                                                'Content-Type': 'application/json',
+                                                                'Content-Length': Buffer.byteLength(queryStr)
+                                                           }
+                                                }
+                                
+                                var request = http.request(post_options, function(response)
+                                              {
+                                                var body = "";
+
+                                                response.on('data', function(data)					
+                                                {
+                                                        body += data ;
+                                                });
+
+                                                response.on('end', function()
+                                                {
+                                                        obj = JSON.parse(body);
+                                                        callback(false, obj);
+                                                });
+
+                                              });
+                                
+                                                request.on('error', function(e)
+                                                {
+                                                        console.log('Problem with request: ' + e.message);
+                                                        callback(false, obj);
+                                                });
+
+                                request.write(queryStr);
+                                request.end();       
+                        }
+
+                    }    
+
+
+
+
 
 
 exports.apiReport = function(req, res)
@@ -46,16 +269,12 @@ exports.apiReport = function(req, res)
                                                            }
                                             }
 
-                        //console.log(post_options);
-                        //console.log("@@@@@@@@@@@@@@@@@");
-
-			var request = http.request(post_options, function(response)
-                                      {
+                                var request = http.request(post_options, function(response)
+                                        {
                                         var body = "";
 
-                                        response.on('data', function(data)
-										
-										{
+                                        response.on('data', function(data)					
+                                        {
                                                 body += data ;
                                         });
 
@@ -67,13 +286,13 @@ exports.apiReport = function(req, res)
                                                 res.send(JSON.parse(body));
                                         });
 
-                                      });
+                                        });
 
 
-                        request.on('error', function(e)
-                                {
-                                        console.log('Problem with request: ' + e.message);
-                                });
+                                        request.on('error', function(e)
+                                                {
+                                                        console.log('Problem with request: ' + e.message);
+                                                });
 
 
                         request.write(queryStr);
