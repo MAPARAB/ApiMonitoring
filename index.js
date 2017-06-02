@@ -34,7 +34,7 @@ router.get('/home', function(req, res) {
 router.post('/login', auth.authenticate);
 
 //Elastic search query
-router.post('/api/v1/report', apiService.apiReport);
+router.post('/api/v1/report', apiService.apiAsyncReport);
 
 // more routes for our API will happen here
 
