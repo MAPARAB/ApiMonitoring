@@ -35,7 +35,7 @@ exports.apiAsyncReport = function(req, res)
                         async.parallel([AmazonHits, EbayHits, StoreFeederHits, StubhubHits, PayPalHits], function(err, results)
                         {
                           console.log("Executed all calls in parallel.");
-                          res.send({"Result" : [{"Vendor": vendorArray[0], api:results[0]}, {"Vendor": vendorArray[1], api:results[1]} , {"Vendor": vendorArray[2], api:results[2]}, {"Vendor": vendorArray[3], api:results[3]}, , {"Vendor": vendorArray[4], api:results[4]}]});
+                          res.send({"Result" : [{"Vendor": vendorArray[0], api:results[0]}, {"Vendor": vendorArray[1], api:results[1]} , {"Vendor": vendorArray[2], api:results[2]}, {"Vendor": vendorArray[3], api:results[3]}, {"Vendor": vendorArray[4], api:results[4]}]});
                         })
 
                         function AmazonHits(callback)
@@ -83,7 +83,7 @@ exports.apiAsyncReport = function(req, res)
                                                 request.on('error', function(e)
                                                 {
                                                         console.log('Problem with request: ' + e.message);
-                                                        //callback(false, obj);
+                                                        callback(false, '{"status":"500" , "message":"Problem with the rest api"}');
                                                 });
 
                                 request.write(queryStr);
@@ -135,7 +135,7 @@ exports.apiAsyncReport = function(req, res)
                                                 request.on('error', function(e)
                                                 {
                                                         console.log('Problem with request: ' + e.message);
-                                                        callback(false, obj);
+                                                        callback(false, '{"status":"500" , "message":"Problem with the rest api"}');
                                                 });
 
                                 request.write(queryStr);
@@ -187,7 +187,7 @@ exports.apiAsyncReport = function(req, res)
                                                 request.on('error', function(e)
                                                 {
                                                         console.log('Problem with request: ' + e.message);
-                                                        callback(false, obj);
+                                                        callback(false, '{"status":"500" , "message":"Problem with the rest api"}');
                                                 });
 
                                 request.write(queryStr);
@@ -239,7 +239,7 @@ exports.apiAsyncReport = function(req, res)
                                                 request.on('error', function(e)
                                                 {
                                                         console.log('Problem with request: ' + e.message);
-                                                        callback(false, obj);
+                                                        callback(false, '{"status":"500" , "message":"Problem with the rest api"}');
                                                 });
 
                                 request.write(queryStr);
@@ -291,14 +291,14 @@ exports.apiAsyncReport = function(req, res)
                                                 request.on('error', function(e)
                                                 {
                                                         console.log('Problem with request: ' + e.message);
-                                                        callback(false, obj);
+                                                        callback(false, '{"status":"500" , "message":"Problem with the rest api"}');
                                                 });
 
                                 request.write(queryStr);
                                 request.end();       
                         }
 
-                    }    
+                    }  
 
 
 
