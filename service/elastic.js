@@ -30,27 +30,30 @@ exports.apiAsyncReport = function(req, res)
 
                         //Split of vendors
                         var vendorArray = vendors.split(',');
-                        console.log(vendorArray);
 
+                        var queryStr = "";
                         var collection = [];
+                        var k = 0;
 
-                        for(i=0;i<vendorArray.length;i++)
+                        for(i=0;i<(vendorArray.length*2);i++)
                         {
                         collection.push(
                                         (function(i)
                                         {
                                                 return function (callback)
                                                 {
-                                                        if(status.trim() == 'success')
-                                                                {var queryStr = properties.get('olp-adapter-service-access.api.search.query');}
+                                                        if(i<vendorArray.length)      
+                                                        {queryStr = properties.get('olp-adapter-service-access.api.search.query');}
                                                         else
-                                                                {var queryStr = properties.get('olp-adapter-service-access.api.failsearch.query');}
+                                                        {queryStr = properties.get('olp-adapter-service-access.api.failsearch.query');}
                                 
                                                         queryStr = queryStr.replace('1493363491000', new Date(moment().subtract(args1, args2).format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
                                                         queryStr = queryStr.replace('1493367091000' , new Date(moment().format('YYYY-MM-DD HH:mm:ss.SSS')).getTime());
-                                                        queryStr = queryStr.replace('Vendor' , vendorArray[i]);
-                                                        
-                                                        console.log(vendorArray[i] + "::::" + queryStr);
+                                                        queryStr = queryStr.replace('Vendor' , vendorArray[k]);
+                                                        console.log(vendorArray[k] + "::::" + queryStr);
+                                                        k++;
+                                                        if(k==vendorArray.length)
+                                                        {k=0}
 
                                                         // An object of options to indicate where to post to
                                                         var post_options = {
@@ -94,13 +97,26 @@ exports.apiAsyncReport = function(req, res)
                                 );
                         }                        
 
-
                         async.parallel(collection, function(err, results)
                         {
                           console.log("Executed all calls in parallel.");
-                          res.send({"Result" : [{"Vendor": vendorArray[0], api:results[0]}, {"Vendor": vendorArray[1], api:results[1]} , {"Vendor": vendorArray[2], api:results[2]}, {"Vendor": vendorArray[3], api:results[3]}, {"Vendor": vendorArray[4], api:results[4]}]});
+                          res.send(
+                                        {"Result" : 
+                                                [
+                                                        {"Vendor": vendorArray[0], "status":"success" ,api:results[0]}, 
+                                                        {"Vendor": vendorArray[1], "status":"success", api:results[1]} , 
+                                                        {"Vendor": vendorArray[2], "status":"success", api:results[2]}, 
+                                                        {"Vendor": vendorArray[3], "status":"success", api:results[3]}, 
+                                                        {"Vendor": vendorArray[4], "status":"success", api:results[4]},
+                                                        {"Vendor": vendorArray[0], "status":"fail", api:results[5]},
+                                                        {"Vendor": vendorArray[1], "status":"fail", api:results[6]},
+                                                        {"Vendor": vendorArray[2], "status":"fail", api:results[7]},
+                                                        {"Vendor": vendorArray[3], "status":"fail", api:results[8]},
+                                                        {"Vendor": vendorArray[4], "status":"fail", api:results[9]}
+                                                ]
+                                        }
+                                  );
                         })
-                
                 } 
 
 
