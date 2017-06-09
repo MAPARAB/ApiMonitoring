@@ -19,7 +19,7 @@ exports.apiAsyncReport = function(req, res)
                         //get the value from header
                         var status = 'success' ;
                         status = req.headers['status'];
-                        console.log(status);
+                        //console.log(status);
 
                         //Calculating the date range
                         var range = JSON.stringify(req.body);
